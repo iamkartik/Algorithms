@@ -1,4 +1,4 @@
-# from collections import deque
+from collections import deque
 
 # def topological_sort(n,adj,visited,stack):
 #     visited[n]=True
@@ -95,6 +95,83 @@ def fastTopological(adj,top_order):
 
 
 
+# if __name__ == "__main__":
+#     n = int(input())
+#     adj=[[0]]
+#     for _ in range(1,n+1):
+#         s = input().split(" ")
+#         edges=[]
+#         for e in s:
+#             edges.append(int(e))
+#         adj.append(edges)
+#     times = input().split(" ")
+#     time=[]
+#     for t in times:
+#         time.append(int(t))
+#     time.insert(0, -1)
+
+#     # print(time)
+#     # print(adj)
+    
+#     top_order=[None]*(n+1)
+
+#     fastTopological(adj,top_order)
+
+#     arr=[0 for _ in range(n+1)]
+
+#     print(top_order)
+
+#     for i in range(1,n+1):
+#         u = top_order[i]
+#         if arr[u]==0:
+#             arr[u]+=time[u]
+#         # print(i,u,arr[u])
+#         for edge in adj[u]:
+#             if edge is not -1:
+#                 t1 = time[edge]+arr[u]
+#                 t2 = arr[edge]
+#                 # print(edge,"--->>",t1,t2)
+#                 arr[edge] = max(t1,t2)
+    
+#     for i in range(1, n+1):
+#         print(arr[i]) 
+# 
+# 
+# ######################################################################################
+
+def topological_k(adj,top_order):
+    n = len(adj)
+    in_deg=[0]*n
+    # 
+    for v in adj:
+        for edge in v:
+            if edge is not -1:
+                in_deg[edge]+=1
+    
+    queue = deque()
+    # add vertices with zero in deg
+    j=1
+    for k,v in enumerate(in_deg):
+        if v==0:
+            queue.append(k)
+            top_order[j]=k
+            j+=1
+
+    while queue:
+        u = queue.popleft()
+
+        for v in adj[u]:
+            if v is not -1:
+                in_deg[v]-=1
+                if in_deg[v]==0:
+                    queue.append(v)
+                    top_order[j]=v
+                    j+=1
+    
+
+
+
+
 if __name__ == "__main__":
     n = int(input())
     adj=[[0]]
@@ -110,29 +187,28 @@ if __name__ == "__main__":
         time.append(int(t))
     time.insert(0, -1)
 
-    # print(time)
-    # print(adj)
-    
     top_order=[None]*(n+1)
-
+# 
     fastTopological(adj,top_order)
+    print(top_order)
 
+    topological_k(adj,top_order)
+# 
     arr=[0 for _ in range(n+1)]
-
-    # print(top_order)
-
+# 
+    print(top_order)
+# 
     for i in range(1,n+1):
         u = top_order[i]
-        # print(i,u)
-        arr[u]+=time[u]
+        if arr[u]==0:
+            arr[u]+=time[u]
+        # print(i,u,arr[u])
         for edge in adj[u]:
             if edge is not -1:
-                t1 = arr[edge]+arr[u]
+                t1 = time[edge]+arr[u]
                 t2 = arr[edge]
-                if t1>t2:
-                    arr[edge]=t1
-    
-    
+                # print(edge,"--->>",t1,t2)
+                arr[edge] = max(t1,t2)
+    # 
     for i in range(1, n+1):
-        print(arr[i])    
-   
+        print(arr[i]) 
